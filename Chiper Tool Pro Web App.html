@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ابزار رمزنگاری پیشرفته</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease;
+        }
+        .text-title {
+            font-family: 'Vazirmatn', sans-serif;
+            text-shadow: 0 0 10px #38bdf8, 0 0 20px #38bdf8;
+            color: #60a5fa;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-200 flex items-center justify-center min-h-screen p-4">
+    <div class="bg-slate-800 p-8 md:p-10 rounded-2xl shadow-2xl w-full max-w-xl mx-auto border border-slate-700">
+        <!-- Main Title -->
+        <h1 class="text-3xl text-center mb-6 text-title">ابزار رمزنگاری پیشرفته</h1>
+        <p class="text-center text-slate-400 mb-8">انتخاب کنید که متن شما چگونه تغییر کند.</p>
+        
+        <!-- Input Section -->
+        <div class="mb-6">
+            <label for="text-input" class="block text-slate-300 font-medium mb-2">متن خود را اینجا وارد کنید:</label>
+            <textarea id="text-input" rows="5" class="w-full p-3 rounded-lg bg-slate-700 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300" placeholder="متن خود را وارد کنید..."></textarea>
+        </div>
+
+        <!-- Operation Selection -->
+        <div class="mb-6">
+            <label for="operation-select" class="block text-slate-300 font-medium mb-2">عملیات مورد نظر را انتخاب کنید:</label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Row 1 -->
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="reverse" name="operation" value="reverse" checked class="form-radio text-blue-500">
+                    <label for="reverse" class="text-slate-200">معکوس کردن (abc → cba)</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="interleave" name="operation" value="interleave" class="form-radio text-blue-500">
+                    <label for="interleave" class="text-slate-200">حذف کاراکترهای دوم (abcd → ac)</label>
+                </div>
+                
+                <!-- Row 2 -->
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="rot13" name="operation" value="rot13" class="form-radio text-blue-500">
+                    <label for="rot13" class="text-slate-200">رمز ROT13</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="atbash" name="operation" value="atbash" class="form-radio text-blue-500">
+                    <label for="atbash" class="text-slate-200">رمز Atbash</label>
+                </div>
+
+                <!-- Row 3 -->
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="base64encode" name="operation" value="base64encode" class="form-radio text-blue-500">
+                    <label for="base64encode" class="text-slate-200">Base64 Encode</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="base64decode" name="operation" value="base64decode" class="form-radio text-blue-500">
+                    <label for="base64decode" class="text-slate-200">Base64 Decode</label>
+                </div>
+
+                <!-- Row 4 -->
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="morsecode" name="operation" value="morsecode" class="form-radio text-blue-500">
+                    <label for="morsecode" class="text-slate-200">کد مورس</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="binary" name="operation" value="binary" class="form-radio text-blue-500">
+                    <label for="binary" class="text-slate-200">تبدیل به باینری</label>
+                </div>
+                
+                <!-- Row 5 -->
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="hex" name="operation" value="hex" class="form-radio text-blue-500">
+                    <label for="hex" class="text-slate-200">تبدیل به هگز</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="urlencode" name="operation" value="urlencode" class="form-radio text-blue-500">
+                    <label for="urlencode" class="text-slate-200">URL Encode</label>
+                </div>
+
+                <!-- Row 6 -->
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="capitalize" name="operation" value="capitalize" class="form-radio text-blue-500">
+                    <label for="capitalize" class="text-slate-200">اولین حرف بزرگ</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="lowercase" name="operation" value="lowercase" class="form-radio text-blue-500">
+                    <label for="lowercase" class="text-slate-200">تبدیل به حروف کوچک</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 sm:space-x-reverse mb-6">
+            <button id="process-button" class="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition duration-300 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                پردازش
+            </button>
+            <button id="clear-button" class="flex-1 bg-gray-600 text-white font-bold py-3 rounded-xl hover:bg-gray-700 transition duration-300 shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500">
+                پاک کردن
+            </button>
+        </div>
+
+        <!-- Result Section -->
+        <div>
+            <label for="result-output" id="result-label" class="block text-slate-300 font-medium mb-2">نتیجه:</label>
+            <textarea id="result-output" rows="5" class="w-full p-3 rounded-lg bg-slate-700 text-white border border-slate-600 cursor-not-allowed" readonly></textarea>
+        </div>
+
+        <!-- Message Box -->
+        <div id="message-box" class="mt-4 p-3 text-center rounded-lg text-sm hidden"></div>
+    </div>
+
+    <script>
+        // Get references to DOM elements
+        const textInput = document.getElementById('text-input');
+        const processButton = document.getElementById('process-button');
+        const clearButton = document.getElementById('clear-button');
+        const resultOutput = document.getElementById('result-output');
+        const messageBox = document.getElementById('message-box');
+
+        // Functions for different ciphers
+        const ciphers = {
+            reverse: (text) => text.split('').reverse().join(''),
+            interleave: (text) => {
+                let interleaved = '';
+                for (let i = 0; i < text.length; i += 2) {
+                    interleaved += text[i];
+                }
+                return interleaved;
+            },
+            rot13: (text) => {
+                return text.replace(/[a-zA-Z]/g, (c) => {
+                    return String.fromCharCode((c <= 'Z' ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
+                });
+            },
+            atbash: (text) => {
+                return text.split('').map(char => {
+                    const code = char.charCodeAt(0);
+                    if (code >= 65 && code <= 90) {
+                        return String.fromCharCode(90 - (code - 65));
+                    } else if (code >= 97 && code <= 122) {
+                        return String.fromCharCode(122 - (code - 97));
+                    }
+                    return char;
+                }).join('');
+            },
+            base64encode: (text) => btoa(text),
+            base64decode: (text) => {
+                try {
+                    return atob(text);
+                } catch (e) {
+                    return 'خطا: متن وارد شده برای رمزگشایی Base64 معتبر نیست.';
+                }
+            },
+            morsecode: (text) => {
+                const morse = {
+                    'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.', 'G': '--.', 'H': '....', 'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.', 'O': '---', 'P': '.--.', 'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-', 'Y': '-.--', 'Z': '--..',
+                    '0': '-----', '1': '.----', '2': '..---', '3': '...--', '4': '....-', '5': '.....', '6': '-....', '7': '--...', '8': '---..', '9': '----.',
+                    '.': '.-.-.-', ',': '--..--', '?': '..--..', "'": '.----.', '!': '-.-.--', '/': '-..-.', '(': '-.--.', ')': '-.--.-', '&': '.-...', ':': '---...', ';': '-.-.-.', '=': '-...-', '+': '.-.-.', '-': '-....-', '_': '..--.-', '"': '.-..-.', '$': '...-..-', '@': '.--.-.', ' ': '/'
+                };
+                return text.toUpperCase().split('').map(char => morse[char] || char).join(' ');
+            },
+            binary: (text) => {
+                return text.split('').map(char => {
+                    return char.charCodeAt(0).toString(2);
+                }).join(' ');
+            },
+            hex: (text) => {
+                return text.split('').map(char => {
+                    return char.charCodeAt(0).toString(16);
+                }).join(' ');
+            },
+            urlencode: (text) => encodeURIComponent(text),
+            capitalize: (text) => text.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
+            lowercase: (text) => text.toLowerCase(),
+        };
+
+        // Function to show a message
+        function showMessage(text, type = 'error') {
+            messageBox.textContent = text;
+            messageBox.classList.remove('hidden', 'bg-red-700', 'text-red-200', 'bg-green-700', 'text-green-200');
+            if (type === 'error') {
+                messageBox.classList.add('bg-red-700', 'text-red-200');
+            } else if (type === 'success') {
+                messageBox.classList.add('bg-green-700', 'text-green-200');
+            }
+        }
+
+        // Function to clear the message
+        function clearMessage() {
+            messageBox.classList.add('hidden');
+        }
+
+        // Event listener for the process button
+        processButton.addEventListener('click', () => {
+            clearMessage();
+            const input_text = textInput.value.trim();
+            const selectedOperation = document.querySelector('input[name="operation"]:checked').value;
+
+            if (!input_text) {
+                showMessage('لطفا متنی را وارد کنید!');
+                resultOutput.value = '';
+                return;
+            }
+
+            const output_text = ciphers[selectedOperation](input_text);
+            resultOutput.value = output_text;
+            showMessage('عملیات با موفقیت انجام شد!', 'success');
+        });
+
+        // Event listener for the clear button
+        clearButton.addEventListener('click', () => {
+            textInput.value = '';
+            resultOutput.value = '';
+            clearMessage();
+        });
+    </script>
+</body>
+</html>
