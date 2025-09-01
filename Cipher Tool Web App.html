@@ -1,0 +1,191 @@
+<!-- # import tkinter as tk
+# from tkinter import ttk
+
+# def process_text():
+#     """Processes the text based on the user's selection and displays the result."""
+#     input_text = text_input.get("1.0", tk.END).strip()
+    
+#     if not input_text:
+#         result_label.config(text="Please enter some text!", foreground="red")
+#         return
+
+#     selected_option = option_var.get()
+#     output_text = ""
+
+#     if selected_option == "reverse":
+#         output_text = input_text[::-1]
+#     elif selected_option == "interleave":
+#         output_text = input_text[::2]
+    
+#     result_text.configure(state="normal")  # Enable editing to insert text
+#     result_text.delete("1.0", tk.END)      # Clear previous content
+#     result_text.insert(tk.END, output_text) # Display the new result
+#     result_text.configure(state="disabled") # Disable editing again
+#     result_label.config(text="Result:", foreground="black")
+
+# # Main window setup
+# root = tk.Tk()
+# root.title("Python Cipher Tool")
+# root.geometry("600x550")
+# root.resizable(False, False) # Disable window resizing
+# root.configure(bg="#2c3e50") # Dark background color
+
+# # Create frame for content
+# content_frame = ttk.Frame(root, padding="20")
+# content_frame.pack(pady=20, padx=20, fill=tk.BOTH, expand=True)
+# content_frame.configure(relief="raised", borderwidth=2, style="My.TFrame")
+
+# # Style for the frame and widgets
+# style = ttk.Style()
+# style.configure("My.TFrame", background="#ecf0f1", borderwidth=2, relief="groove")
+# style.configure("TLabel", background="#ecf0f1", foreground="#2c3e50", font=("Arial", 12))
+# style.configure("TRadiobutton", background="#ecf0f1", foreground="#2c3e50", font=("Arial", 11))
+# style.configure("TButton", background="#3498db", foreground="white", font=("Arial", 12, "bold"))
+
+# # App title
+# title_label = ttk.Label(content_frame, text="Welcome to the Cipher Tool!", font=("Arial", 18, "bold"), foreground="#34495e")
+# title_label.pack(pady=(0, 15))
+# title_label.configure(background="#ecf0f1")
+
+# # Input label
+# input_label = ttk.Label(content_frame, text="Enter your text here:")
+# input_label.pack(anchor="w", pady=(10, 5))
+
+# # Text input box
+# text_input = tk.Text(content_frame, height=5, width=60, font=("Arial", 11), wrap="word", bd=2, relief="sunken")
+# text_input.pack(pady=5)
+
+# # Operation selection
+# option_var = tk.StringVar(value="reverse") # Default value
+
+# option_frame = ttk.Frame(content_frame)
+# option_frame.pack(pady=10)
+# option_frame.configure(background="#ecf0f1")
+
+# reverse_radio = ttk.Radiobutton(option_frame, text="Reverse Text (e.g., 'abc' -> 'cba')", variable=option_var, value="reverse")
+# reverse_radio.pack(anchor="w")
+
+# interleave_radio = ttk.Radiobutton(option_frame, text="Skip Characters (e.g., 'abcdef' -> 'ace')", variable=option_var, value="interleave")
+# interleave_radio.pack(anchor="w")
+
+# # Process button
+# process_button = ttk.Button(content_frame, text="Process", command=process_text)
+# process_button.pack(pady=15)
+
+# # Result label
+# result_label = ttk.Label(content_frame, text="Result:")
+# result_label.pack(anchor="w", pady=(10, 5))
+
+# # Text output box
+# result_text = tk.Text(content_frame, height=5, width=60, font=("Arial", 11), wrap="word", bd=2, relief="sunken", state="disabled")
+# result_text.pack(pady=5)
+
+# # Run the Tkinter main loop
+# root.mainloop() -->
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ابزار رمزنگاری</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            direction: rtl; /* Set text direction to right-to-left for Persian */
+        }
+    </style>
+</head>
+<body class="bg-slate-900 flex items-center justify-center min-h-screen p-4">
+    <div class="bg-slate-700 p-8 rounded-2xl shadow-2xl w-full max-w-xl mx-auto border border-slate-600">
+        <!-- Main title -->
+        <h1 class="text-3xl font-bold text-center text-white mb-6">به ابزار رمزنگاری خوش آمدید!</h1>
+
+        <!-- Input Section -->
+        <div class="mb-4">
+            <label for="text-input" class="block text-slate-300 font-medium mb-2">متن خود را اینجا وارد کنید:</label>
+            <textarea id="text-input" rows="5" class="w-full p-3 rounded-lg bg-slate-800 text-white border-2 border-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300" placeholder="متن خود را وارد کنید..."></textarea>
+        </div>
+
+        <!-- Operation Selection -->
+        <div class="mb-6 space-y-3">
+            <h2 class="text-slate-300 font-medium mb-2">عملیات مورد نظر را انتخاب کنید:</h2>
+            <div>
+                <input type="radio" id="reverse" name="operation" value="reverse" checked class="accent-blue-500">
+                <label for="reverse" class="text-slate-200 mr-2">معکوس کردن متن (مثال: 'abc' -> 'cba')</label>
+            </div>
+            <div>
+                <input type="radio" id="interleave" name="operation" value="interleave" class="accent-blue-500">
+                <label for="interleave" class="text-slate-200 mr-2">حذف کاراکترهای دوم (مثال: 'abcdef' -> 'ace')</label>
+            </div>
+        </div>
+
+        <!-- Process Button -->
+        <button id="process-button" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition duration-300 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+            پردازش
+        </button>
+
+        <!-- Result Section -->
+        <div class="mt-6">
+            <label for="result-output" id="result-label" class="block text-slate-300 font-medium mb-2">نتیجه:</label>
+            <textarea id="result-output" rows="5" class="w-full p-3 rounded-lg bg-slate-800 text-white border-2 border-slate-600 cursor-not-allowed" readonly></textarea>
+        </div>
+
+        <!-- Message Box -->
+        <div id="message-box" class="mt-4 p-3 rounded-lg text-sm hidden"></div>
+    </div>
+
+    <script>
+        // Get references to DOM elements
+        const textInput = document.getElementById('text-input');
+        const processButton = document.getElementById('process-button');
+        const resultOutput = document.getElementById('result-output');
+        const reverseRadio = document.getElementById('reverse');
+        const interleaveRadio = document.getElementById('interleave');
+        const messageBox = document.getElementById('message-box');
+
+        // Function to show a message
+        function showMessage(text, type = 'error') {
+            messageBox.textContent = text;
+            messageBox.classList.remove('hidden', 'bg-red-200', 'text-red-800', 'bg-green-200', 'text-green-800');
+            if (type === 'error') {
+                messageBox.classList.add('bg-red-200', 'text-red-800');
+            } else if (type === 'success') {
+                messageBox.classList.add('bg-green-200', 'text-green-800');
+            }
+        }
+
+        // Function to clear the message
+        function clearMessage() {
+            messageBox.classList.add('hidden');
+        }
+
+        // Event listener for the process button
+        processButton.addEventListener('click', () => {
+            clearMessage();
+            const input_text = textInput.value.trim();
+
+            if (!input_text) {
+                showMessage('لطفا متنی را وارد کنید!');
+                resultOutput.value = ''; // Clear the output
+                return;
+            }
+
+            let output_text = "";
+            if (reverseRadio.checked) {
+                output_text = input_text.split('').reverse().join('');
+            } else if (interleaveRadio.checked) {
+                let interleaved = '';
+                for (let i = 0; i < input_text.length; i += 2) {
+                    interleaved += input_text[i];
+                }
+                output_text = interleaved;
+            }
+
+            resultOutput.value = output_text;
+            showMessage('عملیات با موفقیت انجام شد!', 'success');
+        });
+    </script>
+</body>
+</html>
+
