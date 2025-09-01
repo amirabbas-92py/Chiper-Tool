@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ابزار رمزنگاری پیشرفته</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease;
+        }
+        .text-title {
+            font-family: 'Vazirmatn', sans-serif;
+            text-shadow: 0 0 10px #7dd3fc, 0 0 20px #7dd3fc;
+            color: #22d3ee;
+        }
+
+        /* Toggle switch styling */
+        .toggle-switch {
+            width: 48px;
+            height: 24px;
+            background-color: #4a5568;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-switch.toggled {
+            background-color: #63b3ed;
+        }
+
+        .toggle-switch .toggle-circle {
+            width: 20px;
+            height: 20px;
+            background-color: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            transition: right 0.3s;
+        }
+
+        .toggle-switch.toggled .toggle-circle {
+            right: 26px;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-200 flex items-center justify-center min-h-screen p-4 transition-colors duration-500">
+    <div class="absolute top-4 right-4 flex items-center space-x-2 space-x-reverse">
+        <span id="theme-label" class="text-slate-400 text-sm">حالت تاریک</span>
+        <div id="theme-toggle" class="toggle-switch">
+            <div class="toggle-circle"></div>
+        </div>
+    </div>
+    <div id="container" class="bg-slate-800 p-8 md:p-10 rounded-2xl shadow-2xl w-full max-w-xl mx-auto border border-slate-700 transition-colors duration-500">
+        <h1 class="text-3xl font-extrabold text-center mb-6 text-title">ابزار رمزنگاری پیشرفته</h1>
+        <p class="text-center text-slate-400 mb-8">انتخاب کنید که متن شما چگونه تغییر کند.</p>
+        
+        <div class="mb-6">
+            <label for="text-input" class="block text-slate-300 font-medium mb-2">متن خود را اینجا وارد کنید:</label>
+            <textarea id="text-input" rows="5" class="w-full p-3 rounded-lg bg-slate-700 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300" placeholder="متن خود را وارد کنید..."></textarea>
+        </div>
+
+        <div class="mb-6">
+            <label for="operation-select" class="block text-slate-300 font-medium mb-2">عملیات مورد نظر را انتخاب کنید:</label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="reverse" name="operation" value="reverse" checked class="form-radio text-cyan-500">
+                    <label for="reverse" class="text-slate-200">معکوس کردن (abc → cba)</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="interleave" name="operation" value="interleave" class="form-radio text-cyan-500">
+                    <label for="interleave" class="text-slate-200">حذف کاراکترهای دوم (abcd → ac)</label>
+                </div>
+                
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="rot13" name="operation" value="rot13" class="form-radio text-cyan-500">
+                    <label for="rot13" class="text-slate-200">رمز ROT13</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="atbash" name="operation" value="atbash" class="form-radio text-cyan-500">
+                    <label for="atbash" class="text-slate-200">رمز Atbash</label>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="base64encode" name="operation" value="base64encode" class="form-radio text-cyan-500">
+                    <label for="base64encode" class="text-slate-200">Base64 Encode</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="base64decode" name="operation" value="base64decode" class="form-radio text-cyan-500">
+                    <label for="base64decode" class="text-slate-200">Base64 Decode</label>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="morsecode" name="operation" value="morsecode" class="form-radio text-cyan-500">
+                    <label for="morsecode" class="text-slate-200">کد مورس</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="binary" name="operation" value="binary" class="form-radio text-cyan-500">
+                    <label for="binary" class="text-slate-200">تبدیل به باینری</label>
+                </div>
+                
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="hex" name="operation" value="hex" class="form-radio text-cyan-500">
+                    <label for="hex" class="text-slate-200">تبدیل به هگز</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="urlencode" name="operation" value="urlencode" class="form-radio text-cyan-500">
+                    <label for="urlencode" class="text-slate-200">URL Encode</label>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="capitalize" name="operation" value="capitalize" class="form-radio text-cyan-500">
+                    <label for="capitalize" class="text-slate-200">اولین حرف بزرگ</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="lowercase" name="operation" value="lowercase" class="form-radio text-cyan-500">
+                    <label for="lowercase" class="text-slate-200">تبدیل به حروف کوچک</label>
+                </div>
+                
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="caesarcipher" name="operation" value="caesarcipher" class="form-radio text-cyan-500">
+                    <label for="caesarcipher" class="text-slate-200">رمز سزار</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="vigenere" name="operation" value="vigenere" class="form-radio text-cyan-500">
+                    <label for="vigenere" class="text-slate-200">رمز ویژنر</label>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="a1z26" name="operation" value="a1z26" class="form-radio text-cyan-500">
+                    <label for="a1z26" class="text-slate-200">رمز A1Z26</label>
+                </div>
+            </div>
+        </div>
+
+        <div id="additional-inputs" class="mb-6 hidden">
+            <div id="caesar-key-container" class="mb-4 hidden">
+                <label for="caesar-key" class="block text-slate-300 font-medium mb-2">مقدار شیفت (1 تا 25):</label>
+                <input type="number" id="caesar-key" min="1" max="25" value="3" class="w-full p-3 rounded-lg bg-slate-700 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300">
+            </div>
+            <div id="vigenere-key-container" class="mb-4 hidden">
+                <label for="vigenere-key" class="block text-slate-300 font-medium mb-2">کلمه کلیدی:</label>
+                <input type="text" id="vigenere-key" class="w-full p-3 rounded-lg bg-slate-700 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300" placeholder="کلمه کلیدی خود را وارد کنید">
+            </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 sm:space-x-reverse mb-6">
+            <button id="process-button" class="flex-1 bg-cyan-600 text-white font-bold py-3 rounded-xl hover:bg-cyan-700 transition duration-300 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                پردازش
+            </button>
+            <button id="clear-button" class="flex-1 bg-gray-600 text-white font-bold py-3 rounded-xl hover:bg-gray-700 transition duration-300 shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500">
+                پاک کردن
+            </button>
+        </div>
+
+        <div>
+            <label for="result-output" id="result-label" class="block text-slate-300 font-medium mb-2">نتیجه:</label>
+            <textarea id="result-output" rows="5" class="w-full p-3 rounded-lg bg-slate-700 text-white border border-slate-600 cursor-not-allowed" readonly></textarea>
+        </div>
+
+        <div id="message-box" class="mt-4 p-3 text-center rounded-lg text-sm hidden"></div>
+
+        <div class="mt-8 text-center text-slate-500 text-xs">
+            ساخته شده توسط امیرعباس
+        </div>
+    </div>
+
+    <script>
+        // Get references to DOM elements
+        const body = document.body;
+        const container = document.getElementById('container');
+        const textInput = document.getElementById('text-input');
+        const processButton = document.getElementById('process-button');
+        const clearButton = document.getElementById('clear-button');
+        const resultOutput = document.getElementById('result-output');
+        const messageBox = document.getElementById('message-box');
+        const radioButtons = document.querySelectorAll('input[name="operation"]');
+        const additionalInputs = document.getElementById('additional-inputs');
+        const caesarKeyContainer = document.getElementById('caesar-key-container');
+        const caesarKeyInput = document.getElementById('caesar-key');
+        const vigenereKeyContainer = document.getElementById('vigenere-key-container');
+        const vigenereKeyInput = document.getElementById('vigenere-key');
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeLabel = document.getElementById('theme-label');
+
+        // Functions for different ciphers
+        const ciphers = {
+            reverse: (text) => text.split('').reverse().join(''),
+            interleave: (text) => {
+                let interleaved = '';
+                for (let i = 0; i < text.length; i += 2) {
+                    interleaved += text[i];
+                }
+                return interleaved;
+            },
+            rot13: (text) => {
+                return text.replace(/[a-zA-Z]/g, (c) => {
+                    return String.fromCharCode((c <= 'Z' ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
+                });
+            },
+            atbash: (text) => {
+                return text.split('').map(char => {
+                    const code = char.charCodeAt(0);
+                    if (code >= 65 && code <= 90) {
+                        return String.fromCharCode(90 - (code - 65));
+                    } else if (code >= 97 && code <= 122) {
+                        return String.fromCharCode(122 - (code - 97));
+                    }
+                    return char;
+                }).join('');
+            },
+            base64encode: (text) => btoa(text),
+            base64decode: (text) => {
+                try {
+                    return atob(text);
+                } catch (e) {
+                    return 'خطا: متن وارد شده برای رمزگشایی Base64 معتبر نیست.';
+                }
+            },
+            morsecode: (text) => {
+                const morse = {
+                    'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.', 'G': '--.', 'H': '....', 'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.', 'O': '---', 'P': '.--.', 'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-', 'Y': '-.--', 'Z': '--..',
+                    '0': '-----', '1': '.----', '2': '..---', '3': '...--', '4': '....-', '5': '.....', '6': '-....', '7': '--...', '8': '---..', '9': '----.',
+                    '.': '.-.-.-', ',': '--..--', '?': '..--..', "'": '.----.', '!': '-.-.--', '/': '-..-.', '(': '-.--.', ')': '-.--.-', '&': '.-...', ':': '---...', ';': '-.-.-.', '=': '-...-', '+': '.-.-.', '-': '-....-', '_': '..--.-', '"': '.-..-.', '$': '...-..-', '@': '.--.-.', ' ': '/'
+                };
+                return text.toUpperCase().split('').map(char => morse[char] || char).join(' ');
+            },
+            binary: (text) => {
+                return text.split('').map(char => {
+                    return char.charCodeAt(0).toString(2);
+                }).join(' ');
+            },
+            hex: (text) => {
+                return text.split('').map(char => {
+                    return char.charCodeAt(0).toString(16);
+                }).join(' ');
+            },
+            urlencode: (text) => encodeURIComponent(text),
+            capitalize: (text) => text.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
+            lowercase: (text) => text.toLowerCase(),
+            caesarcipher: (text) => {
+                const shift = parseInt(caesarKeyInput.value) || 0;
+                return text.replace(/[a-zA-Z]/g, (char) => {
+                    const base = char <= 'Z' ? 65 : 97;
+                    const shiftedCode = (char.charCodeAt(0) - base + shift) % 26 + base;
+                    return String.fromCharCode(shiftedCode);
+                });
+            },
+            vigenere: (text) => {
+                const key = vigenereKeyInput.value.toLowerCase().replace(/[^a-z]/g, '');
+                if (!key) return 'خطا: برای رمز ویژنر یک کلمه کلیدی وارد کنید.';
+                let result = '';
+                let keyIndex = 0;
+                for (let i = 0; i < text.length; i++) {
+                    const char = text[i];
+                    if (/[a-zA-Z]/.test(char)) {
+                        const base = char <= 'Z' ? 65 : 97;
+                        const shift = key.charCodeAt(keyIndex % key.length) - 97;
+                        const shiftedCode = (char.charCodeAt(0) - base + shift) % 26 + base;
+                        result += String.fromCharCode(shiftedCode);
+                        keyIndex++;
+                    } else {
+                        result += char;
+                    }
+                }
+                return result;
+            },
+            a1z26: (text) => {
+                return text.toLowerCase().split('').map(char => {
+                    if (char >= 'a' && char <= 'z') {
+                        return char.charCodeAt(0) - 96;
+                    }
+                    return char;
+                }).join(' ');
+            }
+        };
+
+        // Function to show a message
+        function showMessage(text, type = 'error') {
+            messageBox.textContent = text;
+            messageBox.classList.remove('hidden', 'bg-red-700', 'text-red-200', 'bg-green-700', 'text-green-200');
+            if (type === 'error') {
+                messageBox.classList.add('bg-red-700', 'text-red-200');
+            } else if (type === 'success') {
+                messageBox.classList.add('bg-green-700', 'text-green-200');
+            }
+        }
+
+        // Function to clear the message
+        function clearMessage() {
+            messageBox.classList.add('hidden');
+        }
+
+        // Event listener for the process button
+        processButton.addEventListener('click', () => {
+            clearMessage();
+            const input_text = textInput.value.trim();
+            const selectedOperation = document.querySelector('input[name="operation"]:checked').value;
+
+            if (!input_text) {
+                showMessage('لطفا متنی را وارد کنید!');
+                resultOutput.value = '';
+                return;
+            }
+
+            const output_text = ciphers[selectedOperation](input_text);
+            resultOutput.value = output_text;
+            showMessage('عملیات با موفقیت انجام شد!', 'success');
+        });
+
+        // Event listener for the clear button
+        clearButton.addEventListener('click', () => {
+            textInput.value = '';
+            resultOutput.value = '';
+            clearMessage();
+        });
+
+        // Event listener for radio buttons to show/hide additional inputs
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', () => {
+                const selectedOperation = radio.value;
+                additionalInputs.classList.add('hidden');
+                caesarKeyContainer.classList.add('hidden');
+                vigenereKeyContainer.classList.add('hidden');
+
+                if (selectedOperation === 'caesarcipher') {
+                    additionalInputs.classList.remove('hidden');
+                    caesarKeyContainer.classList.remove('hidden');
+                } else if (selectedOperation === 'vigenere') {
+                    additionalInputs.classList.remove('hidden');
+                    vigenereKeyContainer.classList.remove('hidden');
+                }
+            });
+        });
+
+        // Theme switching logic
+        const lightThemeClasses = {
+            body: ['bg-slate-100', 'text-slate-900'],
+            container: ['bg-white', 'border-slate-300', 'shadow-lg'],
+            textarea: ['bg-slate-200', 'text-slate-900', 'border-slate-300'],
+            label: ['text-slate-700'],
+            radioLabel: ['text-slate-700'],
+            credits: ['text-slate-400'],
+        };
+        const darkThemeClasses = {
+            body: ['bg-slate-900', 'text-slate-200'],
+            container: ['bg-slate-800', 'border-slate-700', 'shadow-2xl'],
+            textarea: ['bg-slate-700', 'text-white', 'border-slate-600'],
+            label: ['text-slate-300'],
+            radioLabel: ['text-slate-200'],
+            credits: ['text-slate-500'],
+        };
+
+        function setLightTheme() {
+            body.classList.remove(...darkThemeClasses.body);
+            body.classList.add(...lightThemeClasses.body);
+            container.classList.remove(...darkThemeClasses.container);
+            container.classList.add(...lightThemeClasses.container);
+            textInput.classList.remove(...darkThemeClasses.textarea);
+            textInput.classList.add(...lightThemeClasses.textarea);
+            resultOutput.classList.remove(...darkThemeClasses.textarea);
+            resultOutput.classList.add(...lightThemeClasses.textarea);
+            document.querySelectorAll('label').forEach(label => {
+                label.classList.remove(...darkThemeClasses.label);
+                label.classList.add(...lightThemeClasses.label);
+            });
+            document.querySelectorAll('.text-slate-200').forEach(el => {
+                el.classList.remove('text-slate-200');
+                el.classList.add('text-slate-700');
+            });
+            themeToggle.classList.add('toggled');
+            themeLabel.textContent = 'حالت روشن';
+            localStorage.setItem('theme', 'light');
+        }
+
+        function setDarkTheme() {
+            body.classList.remove(...lightThemeClasses.body);
+            body.classList.add(...darkThemeClasses.body);
+            container.classList.remove(...lightThemeClasses.container);
+            container.classList.add(...darkThemeClasses.container);
+            textInput.classList.remove(...lightThemeClasses.textarea);
+            textInput.classList.add(...darkThemeClasses.textarea);
+            resultOutput.classList.remove(...lightThemeClasses.textarea);
+            resultOutput.classList.add(...darkThemeClasses.textarea);
+            document.querySelectorAll('label').forEach(label => {
+                label.classList.remove(...lightThemeClasses.label);
+                label.classList.add(...darkThemeClasses.label);
+            });
+            document.querySelectorAll('.text-slate-700').forEach(el => {
+                el.classList.remove('text-slate-700');
+                el.classList.add('text-slate-200');
+            });
+            themeToggle.classList.remove('toggled');
+            themeLabel.textContent = 'حالت تاریک';
+            localStorage.setItem('theme', 'dark');
+        }
+
+        function applySavedTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                setLightTheme();
+            } else {
+                setDarkTheme();
+            }
+        }
+
+        themeToggle.addEventListener('click', () => {
+            if (themeToggle.classList.contains('toggled')) {
+                setDarkTheme();
+            } else {
+                setLightTheme();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', applySavedTheme);
+    </script>
+</body>
+</html>
