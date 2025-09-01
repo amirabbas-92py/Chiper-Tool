@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ابزار رمزنگاری پیشرفته (نسخه 1.1)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease;
+        }
+        .text-title {
+            font-family: 'Vazirmatn', sans-serif;
+            text-shadow: 0 0 10px #7dd3fc, 0 0 20px #7dd3fc;
+            color: #22d3ee;
+        }
+
+        /* Toggle switch styling */
+        .toggle-switch {
+            width: 48px;
+            height: 24px;
+            background-color: #4a5568;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-switch.toggled {
+            background-color: #63b3ed;
+        }
+
+        .toggle-switch .toggle-circle {
+            width: 20px;
+            height: 20px;
+            background-color: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            transition: right 0.3s;
+        }
+
+        .toggle-switch.toggled .toggle-circle {
+            right: 26px;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-200 flex items-center justify-center min-h-screen p-4 transition-colors duration-500">
+    <div class="absolute top-4 right-4 flex items-center space-x-2 space-x-reverse">
+        <span id="theme-label" class="text-slate-400 text-sm">حالت تاریک</span>
+        <div id="theme-toggle" class="toggle-switch">
+            <div class="toggle-circle"></div>
+        </div>
+    </div>
+    <div id="container" class="bg-slate-800 p-8 md:p-10 rounded-2xl shadow-2xl w-full max-w-xl mx-auto border border-slate-700 transition-colors duration-500">
+        <h1 class="text-3xl font-extrabold text-center mb-6 text-title">ابزار رمزنگاری پیشرفته <span class="text-xl">V1.1</span></h1>
+        <p class="text-center text-slate-400 mb-8">انتخاب کنید که متن شما چگونه تغییر کند.</p>
+        
+        <div class="mb-6">
+            <label for="text-input" class="block text-slate-300 font-medium mb-2">متن خود را اینجا وارد کنید:</label>
+            <textarea id="text-input" rows="5" class="w-full p-3 rounded-lg bg-slate-700 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300" placeholder="متن خود را وارد کنید..."></textarea>
+            <input type="file" id="file-input" class="hidden mt-2 text-slate-300" accept=".txt">
+            <button id="upload-file-btn" class="mt-2 bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                بارگذاری فایل متنی
+            </button>
+        </div>
+
+        <div class="mb-6">
+            <label for="operation-select" class="block text-slate-300 font-medium mb-2">عملیات مورد نظر را انتخاب کنید:</label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="reverse" name="operation" value="reverse" checked class="form-radio text-cyan-500">
+                    <label for="reverse" class="text-slate-200">معکوس کردن (abc → cba)</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="interleave" name="operation" value="interleave" class="form-radio text-cyan-500">
+                    <label for="interleave" class="text-slate-200">حذف کاراکترهای دوم (abcd → ac)</label>
+                </div>
+                
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="rot13" name="operation" value="rot13" class="form-radio text-cyan-500">
+                    <label for="rot13" class="text-slate-200">رمز ROT13</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="atbash" name="operation" value="atbash" class="form-radio text-cyan-500">
+                    <label for="atbash" class="text-slate-200">رمز Atbash</label>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="base64encode" name="operation" value="base64encode" class="form-radio text-cyan-500">
+                    <label for="base64encode" class="text-slate-200">Base64 Encode</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="base64decode" name="operation" value="base64decode" class="form-radio text-cyan-500">
+                    <label for="base64decode" class="text-slate-200">Base64 Decode</label>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="morsecode" name="operation" value="morsecode" class="form-radio text-cyan-500">
+                    <label for="morsecode" class="text-slate-200">کد مورس</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="binary" name="operation" value="binary" class="form-radio text-cyan-500">
+                    <label for="binary" class="text-slate-200">تبدیل به باینری</label>
+                </div>
+                
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="hex" name="operation" value="hex" class="form-radio text-cyan-500">
+                    <label for="hex" class="text-slate-200">تبدیل به هگز</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="urlencode" name="operation" value="urlencode" class="form-radio text-cyan-500">
+                    <label for="urlencode" class="text-slate-200">URL Encode</label>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="urldecode" name="operation" value="urldecode" class="form-radio text-cyan-500">
+                    <label for="urldecode" class="text-slate-200">URL Decode</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="capitalize" name="operation" value="capitalize" class="form-radio text-cyan-500">
+                    <label for="capitalize" class="text-slate-200">اولین حرف بزرگ</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="lowercase" name="operation" value="lowercase" class="form-radio text-cyan-500">
+                    <label for="lowercase" class="text-slate-200">تبدیل به حروف کوچک</label>
+                </div>
+                
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="caesarcipher" name="operation" value="caesarcipher" class="form-radio text-cyan-500">
+                    <label for="caesarcipher" class="text-slate-200">رمز سزار</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="caesardecipher" name="operation" value="caesardecipher" class="form-radio text-cyan-500">
+                    <label for="caesardecipher" class="text-slate-200">رمزگشایی سزار</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="vigenere" name="operation" value="vigenere" class="form-radio text-cyan-500">
+                    <label for="vigenere" class="text-slate-200">رمز ویژنر</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="vigeneredecipher" name="operation" value="vigeneredecipher" class="form-radio text-cyan-500">
+                    <label for="vigeneredecipher" class="text-slate-200">رمزگشایی ویژنر</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="a1z26" name="operation" value="a1z26" class="form-radio text-cyan-500">
+                    <label for="a1z26" class="text-slate-200">رمز A1Z26</label>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="railfencecipher" name="operation" value="railfencecipher" class="form-radio text-cyan-500">
+                    <label for="railfencecipher" class="text-slate-200">رمز ریلی</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="railfencedecipher" name="operation" value="railfencedecipher" class="form-radio text-cyan-500">
+                    <label for="railfencedecipher" class="text-slate-200">رمزگشایی ریلی</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="polybiussquare" name="operation" value="polybiussquare" class="form-radio text-cyan-500">
+                    <label for="polybiussquare" class="text-slate-200">مربع پلی‌بیوس</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="polybiusdecypher" name="operation" value="polybiusdecypher" class="form-radio text-cyan-500">
+                    <label for="polybiusdecypher" class="text-slate-200">رمزگشایی پلی‌بیوس</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="keywordcipher" name="operation" value="keywordcipher" class="form-radio text-cyan-500">
+                    <label for="keywordcipher" class="text-slate-200">رمز کلمه‌ی کلیدی</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="keyworddecipher" name="operation" value="keyworddecipher" class="form-radio text-cyan-500">
+                    <label for="keyworddecipher" class="text-slate-200">رمزگشایی کلمه‌ی کلیدی</label>
+                </div>
+            </div>
+        </div>
+
+        <div id="additional-inputs" class="mb-6 hidden">
+            <div id="caesar-key-container" class="mb-4 hidden">
+                <label for="caesar-key" class="block text-slate-300 font-medium mb-2">مقدار شیفت (1 تا 25):</label>
+                <input type="number" id="caesar-key" min="1" max="25" value="3" class="w-full p-3 rounded-lg bg-slate-700 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300">
+            </div>
+            <div id="vigenere-key-container" class="mb-4 hidden">
+                <label for="vigenere-key" class="block text-slate-300 font-medium mb-2">کلمه کلیدی (فقط حروف انگلیسی):</label>
+                <input type="text" id="vigenere-key" class="w-full p-3 rounded-lg bg-slate-700 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300" placeholder="کلمه کلیدی خود را وارد کنید">
+            </div>
+            <div id="keyword-key-container" class="mb-4 hidden">
+                <label for="keyword-key" class="block text-slate-300 font-medium mb-2">کلمه کلیدی (فقط حروف انگلیسی):</label>
+                <input type="text" id="keyword-key" class="w-full p-3 rounded-lg bg-slate-700 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300" placeholder="کلمه کلیدی خود را وارد کنید">
+            </div>
+            <div id="rail-fence-key-container" class="mb-4 hidden">
+                <label for="rail-fence-key" class="block text-slate-300 font-medium mb-2">تعداد ریل (عمق):</label>
+                <input type="number" id="rail-fence-key" min="2" value="3" class="w-full p-3 rounded-lg bg-slate-700 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300">
+            </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 sm:space-x-reverse mb-6">
+            <button id="process-button" class="flex-1 bg-cyan-600 text-white font-bold py-3 rounded-xl hover:bg-cyan-700 transition duration-300 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                پردازش
+            </button>
+            <button id="clear-button" class="flex-1 bg-gray-600 text-white font-bold py-3 rounded-xl hover:bg-gray-700 transition duration-300 shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500">
+                پاک کردن
+            </button>
+        </div>
+
+        <div>
+            <label for="result-output" id="result-label" class="block text-slate-300 font-medium mb-2">نتیجه:</label>
+            <div class="relative">
+                <textarea id="result-output" rows="5" class="w-full p-3 rounded-lg bg-slate-700 text-white border border-slate-600 cursor-not-allowed pr-10" readonly></textarea>
+                <button id="copy-button" class="absolute left-3 top-3 bg-slate-600 text-white p-2 rounded-lg hover:bg-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
+                        <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2H6zM5 9.388V5a1 1 0 011-1h8a1 1 0 011 1v4.388L11.75 7.25a.75.75 0 00-1.5 0L8.25 9.388z" />
+                    </svg>
+                </button>
+            </div>
+            <button id="download-file-btn" class="mt-2 bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-gray-500 hidden">
+                دانلود فایل نتیجه
+            </button>
+        </div>
+
+        <div id="message-box" class="mt-4 p-3 text-center rounded-lg text-sm hidden"></div>
+
+        <div class="mt-8 text-center text-slate-500 text-xs">
+            ساخته شده توسط امیرعباس
+        </div>
+    </div>
+
+    <script>
+        // Get references to DOM elements
+        const body = document.body;
+        const container = document.getElementById('container');
+        const textInput = document.getElementById('text-input');
+        const uploadFileBtn = document.getElementById('upload-file-btn');
+        const fileInput = document.getElementById('file-input');
+        const processButton = document.getElementById('process-button');
+        const clearButton = document.getElementById('clear-button');
+        const resultOutput = document.getElementById('result-output');
+        const copyButton = document.getElementById('copy-button');
+        const downloadFileBtn = document.getElementById('download-file-btn');
+        const messageBox = document.getElementById('message-box');
+        const radioButtons = document.querySelectorAll('input[name="operation"]');
+        const additionalInputs = document.getElementById('additional-inputs');
+        const caesarKeyContainer = document.getElementById('caesar-key-container');
+        const caesarKeyInput = document.getElementById('caesar-key');
+        const vigenereKeyContainer = document.getElementById('vigenere-key-container');
+        const vigenereKeyInput = document.getElementById('vigenere-key');
+        const keywordKeyContainer = document.getElementById('keyword-key-container');
+        const keywordKeyInput = document.getElementById('keyword-key');
+        const railFenceKeyContainer = document.getElementById('rail-fence-key-container');
+        const railFenceKeyInput = document.getElementById('rail-fence-key');
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeLabel = document.getElementById('theme-label');
+
+        // Morse code mapping
+        const morseCodeMap = {
+            'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.', 'G': '--.', 'H': '....', 'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.', 'O': '---', 'P': '.--.', 'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-', 'Y': '-.--', 'Z': '--..',
+            '0': '-----', '1': '.----', '2': '..---', '3': '...--', '4': '....-', '5': '.....', '6': '-....', '7': '--...', '8': '---..', '9': '----.',
+            '.': '.-.-.-', ',': '--..--', '?': '..--..', "'": '.----.', '!': '-.-.--', '/': '-..-.', '(': '-.--.', ')': '-.--.-', '&': '.-...', ':': '---...', ';': '-.-.-.', '=': '-...-', '+': '.-.-.', '-': '-....-', '_': '..--.-', '"': '.-..-.', '$': '...-..-', '@': '.--.-.', ' ': '/'
+        };
+        const reverseMorseCodeMap = Object.fromEntries(Object.entries(morseCodeMap).map(([k, v]) => [v, k]));
+
+        // Polybius Square setup
+        const polybiusKeySquare = [
+            ['A', 'B', 'C', 'D', 'E'],
+            ['F', 'G', 'H', 'I', 'K'], // I and J are often combined
+            ['L', 'M', 'N', 'O', 'P'],
+            ['Q', 'R', 'S', 'T', 'U'],
+            ['V', 'W', 'X', 'Y', 'Z']
+        ];
+        const polybiusMap = {};
+        const reversePolybiusMap = {};
+        for (let r = 0; r < 5; r++) {
+            for (let c = 0; c < 5; c++) {
+                polybiusMap[polybiusKeySquare[r][c]] = `${r + 1}${c + 1}`;
+                reversePolybiusMap[`${r + 1}${c + 1}`] = polybiusKeySquare[r][c];
+            }
+        }
+        polybiusMap['J'] = polybiusMap['I']; // Handle J
+
+        // Helper to generate alphabet from keyword
+        function generateKeywordAlphabet(keyword) {
+            let alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let processedKeyword = '';
+            for (let char of keyword.toUpperCase()) {
+                if (alphabet.includes(char) && !processedKeyword.includes(char)) {
+                    processedKeyword += char;
+                }
+            }
+            let remainingAlphabet = '';
+            for (let char of alphabet) {
+                if (!processedKeyword.includes(char)) {
+                    remainingAlphabet += char;
+                }
+            }
+            return processedKeyword + remainingAlphabet;
+        }
+
+        // Functions for different ciphers
+        const ciphers = {
+            reverse: (text) => text.split('').reverse().join(''),
+            interleave: (text) => {
+                let interleaved = '';
+                for (let i = 0; i < text.length; i += 2) {
+                    interleaved += text[i];
+                }
+                return interleaved;
+            },
+            rot13: (text) => {
+                return text.replace(/[a-zA-Z]/g, (c) => {
+                    return String.fromCharCode((c <= 'Z' ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
+                });
+            },
+            atbash: (text) => {
+                return text.split('').map(char => {
+                    const code = char.charCodeAt(0);
+                    if (code >= 65 && code <= 90) { // Uppercase
+                        return String.fromCharCode(90 - (code - 65));
+                    } else if (code >= 97 && code <= 122) { // Lowercase
+                        return String.fromCharCode(122 - (code - 97));
+                    }
+                    return char;
+                }).join('');
+            },
+            base64encode: (text) => btoa(text),
+            base64decode: (text) => {
+                try {
+                    return atob(text);
+                } catch (e) {
+                    return 'خطا: متن وارد شده برای رمزگشایی Base64 معتبر نیست.';
+                }
+            },
+            morsecode: (text) => {
+                return text.toUpperCase().split('').map(char => morseCodeMap[char] || char).join(' ');
+            },
+            morsedecode: (text) => {
+                return text.split(' ').map(code => reverseMorseCodeMap[code] || '').join('');
+            },
+            binary: (text) => {
+                return text.split('').map(char => {
+                    return char.charCodeAt(0).toString(2);
+                }).join(' ');
+            },
+            hex: (text) => {
+                return text.split('').map(char => {
+                    return char.charCodeAt(0).toString(16);
+                }).join(' ');
+            },
+            urlencode: (text) => encodeURIComponent(text),
+            urldecode: (text) => decodeURIComponent(text),
+            capitalize: (text) => text.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
+            lowercase: (text) => text.toLowerCase(),
+            caesarcipher: (text) => {
+                const shift = parseInt(caesarKeyInput.value) || 0;
+                return text.replace(/[a-zA-Z]/g, (char) => {
+                    const base = char <= 'Z' ? 65 : 97;
+                    const shiftedCode = (char.charCodeAt(0) - base + shift) % 26 + base;
+                    return String.fromCharCode(shiftedCode);
+                });
+            },
+            caesardecipher: (text) => {
+                const shift = parseInt(caesarKeyInput.value) || 0;
+                return text.replace(/[a-zA-Z]/g, (char) => {
+                    const base = char <= 'Z' ? 65 : 97;
+                    const shiftedCode = (char.charCodeAt(0) - base - shift + 26) % 26 + base; // +26 for negative results
+                    return String.fromCharCode(shiftedCode);
+                });
+            },
+            vigenere: (text) => {
+                const key = vigenereKeyInput.value.toLowerCase().replace(/[^a-z]/g, '');
+                if (!key) return 'خطا: برای رمز ویژنر یک کلمه کلیدی معتبر (فقط حروف انگلیسی) وارد کنید.';
+                let result = '';
+                let keyIndex = 0;
+                for (let i = 0; i < text.length; i++) {
+                    const char = text[i];
+                    if (/[a-zA-Z]/.test(char)) {
+                        const base = char <= 'Z' ? 65 : 97;
+                        const shift = key.charCodeAt(keyIndex % key.length) - 97;
+                        const shiftedCode = (char.charCodeAt(0) - base + shift) % 26 + base;
+                        result += String.fromCharCode(shiftedCode);
+                        keyIndex++;
+                    } else {
+                        result += char;
+                    }
+                }
+                return result;
+            },
+            vigeneredecipher: (text) => {
+                const key = vigenereKeyInput.value.toLowerCase().replace(/[^a-z]/g, '');
+                if (!key) return 'خطا: برای رمزگشایی ویژنر یک کلمه کلیدی معتبر (فقط حروف انگلیسی) وارد کنید.';
+                let result = '';
+                let keyIndex = 0;
+                for (let i = 0; i < text.length; i++) {
+                    const char = text[i];
+                    if (/[a-zA-Z]/.test(char)) {
+                        const base = char <= 'Z' ? 65 : 97;
+                        const shift = key.charCodeAt(keyIndex % key.length) - 97;
+                        const shiftedCode = (char.charCodeAt(0) - base - shift + 26) % 26 + base;
+                        result += String.fromCharCode(shiftedCode);
+                        keyIndex++;
+                    } else {
+                        result += char;
+                    }
+                }
+                return result;
+            },
+            a1z26: (text) => {
+                return text.toLowerCase().split('').map(char => {
+                    if (char >= 'a' && char <= 'z') {
+                        return char.charCodeAt(0) - 96;
+                    }
+                    return char;
+                }).join(' ');
+            },
+            // New Ciphers
+            railfencecipher: (text) => {
+                const depth = parseInt(railFenceKeyInput.value);
+                if (depth < 2) return 'خطا: عمق ریل باید حداقل 2 باشد.';
+                const rails = Array.from({ length: depth }, () => []);
+                let rail = 0;
+                let direction = 1; // 1 for down, -1 for up
+
+                for (let i = 0; i < text.length; i++) {
+                    rails[rail].push(text[i]);
+                    rail += direction;
+                    if (rail === depth - 1 || rail === 0) {
+                        direction *= -1;
+                    }
+                }
+                return rails.flat().join('');
+            },
+            railfencedecipher: (text) => {
+                const depth = parseInt(railFenceKeyInput.value);
+                if (depth < 2) return 'خطا: عمق ریل باید حداقل 2 باشد.';
+                const len = text.length;
+                const rails = Array.from({ length: depth }, () => Array(len).fill(''));
+                let rail = 0;
+                let direction = 1;
+
+                // Mark positions
+                const markers = Array.from({ length: depth }, () => []);
+                let markerRail = 0;
+                let markerDirection = 1;
+                for (let i = 0; i < len; i++) {
+                    markers[markerRail].push(i);
+                    markerRail += markerDirection;
+                    if (markerRail === depth - 1 || markerRail === 0) {
+                        markerDirection *= -1;
+                    }
+                }
+
+                // Fill rails with text
+                let textIndex = 0;
+                for (let r = 0; r < depth; r++) {
+                    for (let pos of markers[r]) {
+                        if (textIndex < len) {
+                            rails[r][pos] = text[textIndex++];
+                        }
+                    }
+                }
+
+                // Read in zig-zag
+                let result = '';
+                let readRail = 0;
+                let readDirection = 1;
+                for (let i = 0; i < len; i++) {
+                    result += rails[readRail][i];
+                    readRail += readDirection;
+                    if (readRail === depth - 1 || readRail === 0) {
+                        readDirection *= -1;
+                    }
+                }
+                return result;
+            },
+            polybiussquare: (text) => {
+                return text.toUpperCase().split('').map(char => {
+                    if (/[A-Z]/.test(char)) {
+                        return polybiusMap[char] || '';
+                    }
+                    return char;
+                }).join(' ');
+            },
+            polybiusdecypher: (text) => {
+                const pairs = text.match(/\d{2}/g);
+                if (!pairs) return 'خطا: متن وارد شده برای رمزگشایی پلی‌بیوس معتبر نیست (انتظار جفت اعداد).';
+                return pairs.map(pair => reversePolybiusMap[pair] || '').join('');
+            },
+            keywordcipher: (text) => {
+                const key = keywordKeyInput.value.toLowerCase().replace(/[^a-z]/g, '');
+                if (!key) return 'خطا: برای رمز کلمه‌ی کلیدی یک کلمه کلیدی معتبر (فقط حروف انگلیسی) وارد کنید.';
+                const cipherAlphabet = generateKeywordAlphabet(key);
+                const standardAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                
+                return text.toUpperCase().split('').map(char => {
+                    const index = standardAlphabet.indexOf(char);
+                    if (index !== -1) {
+                        return cipherAlphabet[index];
+                    }
+                    return char;
+                }).join('');
+            },
+            keyworddecipher: (text) => {
+                const key = keywordKeyInput.value.toLowerCase().replace(/[^a-z]/g, '');
+                if (!key) return 'خطا: برای رمزگشایی کلمه‌ی کلیدی یک کلمه کلیدی معتبر (فقط حروف انگلیسی) وارد کنید.';
+                const cipherAlphabet = generateKeywordAlphabet(key);
+                const standardAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+                return text.toUpperCase().split('').map(char => {
+                    const index = cipherAlphabet.indexOf(char);
+                    if (index !== -1) {
+                        return standardAlphabet[index];
+                    }
+                    return char;
+                }).join('');
+            }
+        };
+
+        // Function to show a message
+        function showMessage(text, type = 'error') {
+            messageBox.textContent = text;
+            messageBox.classList.remove('hidden', 'bg-red-700', 'text-red-200', 'bg-green-700', 'text-green-200', 'bg-blue-700', 'text-blue-200');
+            if (type === 'error') {
+                messageBox.classList.add('bg-red-700', 'text-red-200');
+            } else if (type === 'success') {
+                messageBox.classList.add('bg-green-700', 'text-green-200');
+            } else if (type === 'info') {
+                messageBox.classList.add('bg-blue-700', 'text-blue-200');
+            }
+        }
+
+        // Function to clear the message
+        function clearMessage() {
+            messageBox.classList.add('hidden');
+        }
+
+        // Function to perform the selected operation
+        function performOperation() {
+            clearMessage();
+            const input_text = textInput.value.trim();
+            const selectedOperation = document.querySelector('input[name="operation"]:checked').value;
+
+            if (!input_text && !['morsecode', 'morsedecode', 'binary', 'hex'].includes(selectedOperation)) { // Allow these to be empty for custom input
+                resultOutput.value = '';
+                return; // Don't show error immediately for auto-processing if input is empty
+            }
+
+            if (ciphers[selectedOperation]) {
+                const output_text = ciphers[selectedOperation](input_text);
+                resultOutput.value = output_text;
+                showMessage('عملیات با موفقیت انجام شد!', 'success');
+            } else {
+                resultOutput.value = '';
+                showMessage('عملیات انتخاب شده معتبر نیست.', 'error');
+            }
+        }
+
+        // Event listeners for auto-processing
+        textInput.addEventListener('input', performOperation);
+        radioButtons.forEach(radio => radio.addEventListener('change', performOperation));
+        caesarKeyInput.addEventListener('input', performOperation);
+        vigenereKeyInput.addEventListener('input', performOperation);
+        keywordKeyInput.addEventListener('input', performOperation);
+        railFenceKeyInput.addEventListener('input', performOperation);
+
+        // Event listener for the process button (still available for manual trigger if preferred)
+        processButton.addEventListener('click', performOperation);
+
+        // Event listener for the clear button
+        clearButton.addEventListener('click', () => {
+            textInput.value = '';
+            resultOutput.value = '';
+            clearMessage();
+            // Trigger auto-process to clear output on empty input
+            performOperation();
+        });
+
+        // Event listener for radio buttons to show/hide additional inputs
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', () => {
+                const selectedOperation = radio.value;
+                additionalInputs.classList.add('hidden');
+                caesarKeyContainer.classList.add('hidden');
+                vigenereKeyContainer.classList.add('hidden');
+                keywordKeyContainer.classList.add('hidden');
+                railFenceKeyContainer.classList.add('hidden');
+                downloadFileBtn.classList.add('hidden'); // Hide download button by default
+
+                // Show encrypt/decrypt for relevant ciphers
+                if (['caesarcipher', 'caesardecipher'].includes(selectedOperation)) {
+                    additionalInputs.classList.remove('hidden');
+                    caesarKeyContainer.classList.remove('hidden');
+                } else if (['vigenere', 'vigeneredecipher'].includes(selectedOperation)) {
+                    additionalInputs.classList.remove('hidden');
+                    vigenereKeyContainer.classList.remove('hidden');
+                } else if (['keywordcipher', 'keyworddecipher'].includes(selectedOperation)) {
+                    additionalInputs.classList.remove('hidden');
+                    keywordKeyContainer.classList.remove('hidden');
+                } else if (['railfencecipher', 'railfencedecipher'].includes(selectedOperation)) {
+                    additionalInputs.classList.remove('hidden');
+                    railFenceKeyContainer.classList.remove('hidden');
+                }
+
+                // Show download button for operations that typically produce long outputs
+                if (['morsecode', 'binary', 'hex', 'base64encode', 'base64decode', 'railfencecipher', 'railfencedecipher', 'polybiussquare', 'polybiusdecypher', 'keywordcipher', 'keyworddecipher'].includes(selectedOperation)) {
+                    downloadFileBtn.classList.remove('hidden');
+                }
+            });
+        });
+
+        // Copy to clipboard functionality
+        copyButton.addEventListener('click', () => {
+            resultOutput.select();
+            resultOutput.setSelectionRange(0, 99999); // For mobile devices
+            document.execCommand('copy');
+            showMessage('نتیجه کپی شد!', 'info');
+        });
+
+        // File Upload/Download
+        uploadFileBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    textInput.value = e.target.result;
+                    performOperation(); // Process the uploaded text
+                    showMessage('فایل با موفقیت بارگذاری شد.', 'success');
+                };
+                reader.onerror = () => {
+                    showMessage('خطا در خواندن فایل.', 'error');
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        downloadFileBtn.addEventListener('click', () => {
+            const outputText = resultOutput.value;
+            if (!outputText) {
+                showMessage('هیچ متنی برای دانلود وجود ندارد.', 'error');
+                return;
+            }
+
+            const blob = new Blob([outputText], { type: 'text/plain' });
+            const anchor = document.createElement('a');
+            anchor.href = URL.createObjectURL(blob);
+            anchor.download = 'cipher_output.txt';
+            document.body.appendChild(anchor);
+            anchor.click();
+            document.body.removeChild(anchor);
+            URL.revokeObjectURL(anchor.href);
+            showMessage('فایل با موفقیت دانلود شد.', 'success');
+        });
+
+        // Theme switching logic
+        const lightThemeClasses = {
+            body: ['bg-slate-100', 'text-slate-900'],
+            container: ['bg-white', 'border-slate-300', 'shadow-lg'],
+            textarea: ['bg-slate-200', 'text-slate-900', 'border-slate-300'],
+            label: ['text-slate-700'],
+            radioLabel: ['text-slate-700'],
+            credits: ['text-slate-400'],
+            buttons: ['bg-gray-200', 'text-slate-800'], // Added for general button styling
+            buttonHover: ['hover:bg-gray-300'],
+            copyButton: ['bg-slate-300', 'text-slate-800'],
+            copyButtonHover: ['hover:bg-slate-400'],
+        };
+        const darkThemeClasses = {
+            body: ['bg-slate-900', 'text-slate-200'],
+            container: ['bg-slate-800', 'border-slate-700', 'shadow-2xl'],
+            textarea: ['bg-slate-700', 'text-white', 'border-slate-600'],
+            label: ['text-slate-300'],
+            radioLabel: ['text-slate-200'],
+            credits: ['text-slate-500'],
+            buttons: ['bg-gray-600', 'text-white'], // Added for general button styling
+            buttonHover: ['hover:bg-gray-700'],
+            copyButton: ['bg-slate-600', 'text-white'],
+            copyButtonHover: ['hover:bg-slate-500'],
+        };
+
+        function switchTheme(toLight) {
+            const currentTheme = toLight ? darkThemeClasses : lightThemeClasses;
+            const newTheme = toLight ? lightThemeClasses : darkThemeClasses;
+
+            // Remove current theme classes
+            body.classList.remove(...currentTheme.body);
+            container.classList.remove(...currentTheme.container);
+            textInput.classList.remove(...currentTheme.textarea);
+            resultOutput.classList.remove(...currentTheme.textarea);
+            document.querySelectorAll('label').forEach(label => {
+                label.classList.remove(...currentTheme.label);
+                label.classList.remove(...currentTheme.radioLabel); // Specific for radio labels
+            });
+            document.querySelector('.mt-8.text-center').classList.remove(...currentTheme.credits);
+            
+            // Handle specific buttons
+            uploadFileBtn.classList.remove(...currentTheme.buttons, ...currentTheme.buttonHover);
+            downloadFileBtn.classList.remove(...currentTheme.buttons, ...currentTheme.buttonHover);
+            clearButton.classList.remove(...currentTheme.buttons, ...currentTheme.buttonHover);
+            copyButton.classList.remove(...currentTheme.copyButton, ...currentTheme.copyButtonHover);
+
+
+            // Add new theme classes
+            body.classList.add(...newTheme.body);
+            container.classList.add(...newTheme.container);
+            textInput.classList.add(...newTheme.textarea);
+            resultOutput.classList.add(...newTheme.textarea);
+            document.querySelectorAll('label').forEach(label => {
+                // Determine if it's a general label or a radio label
+                if (label.htmlFor && document.getElementById(label.htmlFor) && document.getElementById(label.htmlFor).type === 'radio') {
+                    label.classList.add(...newTheme.radioLabel);
+                } else {
+                    label.classList.add(...newTheme.label);
+                }
+            });
+            document.querySelector('.mt-8.text-center').classList.add(...newTheme.credits);
+
+            // Handle specific buttons
+            uploadFileBtn.classList.add(...newTheme.buttons, ...newTheme.buttonHover);
+            downloadFileBtn.classList.add(...newTheme.buttons, ...newTheme.buttonHover);
+            clearButton.classList.add(...newTheme.buttons, ...newTheme.buttonHover);
+            copyButton.classList.add(...newTheme.copyButton, ...newTheme.copyButtonHover);
+
+            if (toLight) {
+                themeToggle.classList.add('toggled');
+                themeLabel.textContent = 'حالت روشن';
+                localStorage.setItem('theme', 'light');
+            } else {
+                themeToggle.classList.remove('toggled');
+                themeLabel.textContent = 'حالت تاریک';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        function applySavedTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                switchTheme(true); // Apply light theme
+            } else {
+                switchTheme(false); // Apply dark theme
+            }
+        }
+
+        themeToggle.addEventListener('click', () => {
+            switchTheme(!themeToggle.classList.contains('toggled'));
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            applySavedTheme();
+            // Perform initial operation if there's text in the input
+            if (textInput.value.trim() !== '') {
+                performOperation();
+            } else {
+                // Set default operation if input is empty
+                document.getElementById('reverse').checked = true;
+                performOperation();
+            }
+        });
+    </script>
+</body>
+</html>
