@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cipher Tool 2.0</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1e1e2f;
+      color: #f0f0f0;
+      padding: 20px;
+    }
+    h1 {
+      color: #00ffcc;
+    }
+    label, select, textarea, button {
+      display: block;
+      margin: 10px 0;
+      width: 100%;
+      max-width: 500px;
+    }
+    textarea {
+      height: 100px;
+    }
+    button {
+      background-color: #00ffcc;
+      color: #1e1e2f;
+      padding: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    #outputText {
+      background-color: #2e2e3f;
+      padding: 10px;
+      margin-top: 10px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>Cipher Tool 2.0</h1>
+
+  <label for="algorithm">Choose Algorithm:</label>
+  <select id="algorithm">
+    <option value="caesar">Caesar Cipher</option>
+    <option value="base64">Base64</option>
+    <option value="rot13">ROT13</option>
+    <option value="hex">Hexadecimal</option>
+    <option value="morse">Morse Code</option>
+    <option value="binary">Binary Code</option>
+  </select>
+
+  <label for="mode">Mode:</label>
+  <select id="mode">
+    <option value="encode">Encode</option>
+    <option value="decode">Decode</option>
+  </select>
+
+  <label for="inputText">Enter your text:</label>
+  <textarea id="inputText"></textarea>
+
+  <button onclick="process()">Run</button>
+
+  <h3>Result:</h3>
+  <div id="outputText"></div>
+
+  <script>
+    function caesarEncode(str, shift = 3) {
+      return str.replace(/[a-z]/gi, c =>
+        String.fromCharCode(
+          (c.charCodeAt(0) + shift - (c >= 'a' ? 97 : 65)) % 26 + (c >= 'a' ? 97 : 65)
+        )
+      );
+    }
+
+    function caesarDecode(str, shift = 3) {
+      return caesarEncode(str, 26 - shift);
+    }
+
+    function rot13(str) {
+      return str.replace(/[a-z]/gi, c =>
+        String.fromCharCode(
+          (c.charCodeAt(0) + 13 - (c >= 'a' ? 97 : 65)) % 26 + (c >= 'a' ? 97 : 65)
+        )
+      );
+    }
+
+    function hexEncode(str) {
+      return Array.from(str).map(c => c.charCodeAt(0).toString(16)).join(' ');
+    }
+
+    function hexDecode(str) {
+      return str.split(' ').map(h => String.fromCharCode(parseInt(h, 16))).join('');
+    }
+
+    const morseMap = {
+      A: ".-", B: "-...", C: "-.-.", D: "-..", E: ".", F: "..-.",
+      G: "--.", H: "....", I: "..", J: ".---", K: "-.-", L: ".-..",
+      M: "--", N: "-.", O: "---", P: ".--.", Q: "--.-", R: ".-.",
+      S: "...", T: "-", U: "..-", V: "...-", W: ".--", X: "-..-",
+      Y: "-.--", Z: "--..", " ": "/", 0: "-----", 1: ".----", 2: "..---",
+      3: "...--", 4: "....-", 5: ".....", 6: "-....", 7: "--...", 8: "---..", 9: "----."
+    };
+
+    function morseEncode(str) {
+      return str.toUpperCase().split('').map(c => morseMap[c] || '').join(' ');
+    }
+
+    function morseDecode(str) {
+      const reverseMap = Object.fromEntries(Object.entries(morseMap).map(([k, v]) => [v, k]));
+      return str.split(' ').map(code => reverseMap[code] || '').join('');
+    }
+
+    function binaryEncode(str) {
+      return Array.from(str).map(c =>
+        c.charCodeAt(0).toString(2).padStart(8, '0')
+      ).join(' ');
+    }
+
+    function binaryDecode(str) {
+      return str.split(' ').map(bin =>
+        String.fromCharCode(parseInt(bin, 2))
+      ).join('');
+    }
+
+    function process() {
+      const algorithm = document.getElementById("algorithm").value;
+      const mode = document.getElementById("mode").value;
+      const input = document.getElementById("inputText").value;
+      let output = "";
+
+      try {
+        if (algorithm === "caesar") {
+          output = mode === "encode" ? caesarEncode(input) : caesarDecode(input);
+        } else if (algorithm === "base64") {
+          output = mode === "encode" ? btoa(input) : atob(input);
+        } else if (algorithm === "rot13") {
+          output = rot13(input);
+        } else if (algorithm === "hex") {
+          output = mode === "encode" ? hexEncode(input) : hexDecode(input);
+        } else if (algorithm === "morse") {
+          output = mode === "encode" ? morseEncode(input) : morseDecode(input);
+        } else if (algorithm === "binary") {
+          output = mode === "encode" ? binaryEncode(input) : binaryDecode(input);
+        }
+      } catch (e) {
+        output = "Error: Invalid input or decoding failed.";
+      }
+
+      document.getElementById("outputText").innerText = output;
+    }
+  </script>
+</body>
+</html>
